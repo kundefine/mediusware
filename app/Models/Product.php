@@ -20,6 +20,6 @@ class Product extends Model
     }
 
     public function prices() {
-        return $this->hasMany(ProductVariantPrice::class);
+        return $this->hasMany(ProductVariantPrice::class)->distinct('variant');
     }
 }

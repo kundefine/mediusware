@@ -8,14 +8,22 @@
 
 
     <div class="card">
-        <form action="" method="get" class="card-header">
+        <form action="{{url()->current()}}" method="get" class="card-header">
+            @csrf
             <div class="form-row justify-content-between">
                 <div class="col-md-2">
-                    <input type="text" name="title" placeholder="Product Title" class="form-control">
+                    <input type="text" name="title" placeholder="Product Title" class="form-control" value="{{request()->query('title') ?? null}}">
                 </div>
                 <div class="col-md-2">
                     <select name="variant" id="" class="form-control">
-
+                        <option value="">Please Select One</option>
+                        @foreach($variants as $variant)
+                            <optgroup label="{{$variant->title}}">
+                                @foreach($variant->pdv()->get() as $pdv)
+                                    <option value="{{$variant->id}},{{$pdv->variant}}" @if(($variant->id . ',' . $pdv->variant) == request()->query('variant')) selected @endif>{{$pdv->variant}}</option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
                     </select>
                 </div>
 
@@ -24,16 +32,16 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Price Range</span>
                         </div>
-                        <input type="text" name="price_from" aria-label="First name" placeholder="From"
-                               class="form-control">
-                        <input type="text" name="price_to" aria-label="Last name" placeholder="To" class="form-control">
+                        <input type="text" name="price_from" aria-label="First name" placeholder="From" class="form-control" value="{{request()->query('price_from') ?? null}}">
+                        <input type="text" name="price_to" aria-label="Last name" placeholder="To" class="form-control" value="{{request()->query('price_to') ?? null}}">
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <input type="date" name="date" placeholder="Date" class="form-control">
+                    <input type="date" name="date" placeholder="Date" class="form-control" value="{{request()->query('date') ?? null}}">
                 </div>
                 <div class="col-md-1">
-                    <button type="submit" class="btn btn-primary float-right"><i class="fa fa-search"></i></button>
+                    <button type="submit" class="btn btn-primary float-right mx-1"><i class="fa fa-search"></i></button>
+                    <a href="{{url()->current()}}" class="btn btn-danger float-right"><i class="fa fa-times"></i></a>
                 </div>
             </div>
         </form>

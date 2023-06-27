@@ -15,14 +15,68 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['prices' => function($q) {
+        $products = Product::query();
+        $variants = Variant::all();
+
+        if($request->filled('title')) {
+            $products = $products->where('title', $request->query('title'));
+        }
+
+
+        if($request->filled('date')) $products = $products->whereDate('created_at', $request->query('date'));
+
+        $products = $products->with(['prices' => function($q) use ($request) {
+            if($request->filled('price_from')) $q->where('price', '>=', $request->query('price_from'));
+            if($request->filled('price_to')) $q->where('price', '<=', $request->query('price_to'));
+
+            if($request->filled('variant')) {
+                $v_id = explode(",", $request->query('variant'))[0];
+                $v_label = explode(",", $request->query('variant'))[1];
+                $productsVariantIds = ProductVariant::where('variant', $v_label)->where("variant_id", $v_id)->get()->pluck('id')->toArray();
+                $q->where(function ($query) use ($productsVariantIds, $v_id) {
+                    if($v_id == 1) return $query->whereIn('product_variant_one', $productsVariantIds);
+                    if($v_id == 2) return $query->whereIn('product_variant_two', $productsVariantIds);
+                    if($v_id == 3) return $query->whereIn('product_variant_three', $productsVariantIds);
+                });
+            }
+
             return $q->with('pv1', 'pv2', 'pv3');
-        }])->paginate(3);
+        }]);
+
+        if($request->filled('price_from')) {
+            $products = $products->whereHas('prices', function($q) use ($request) {
+                return $q->where('price', '>=', $request->query('price_from'));
+            });
+        }
+
+        if($request->filled('price_to')) {
+            $products = $products->whereHas('prices', function($q) use ($request) {
+                return $q->where('price', '<=', $request->query('price_to'));
+            });
+        }
+
+        if($request->filled('variant')) {
+            $v_id = explode(",", $request->query('variant'))[0];
+            $v_label = explode(",", $request->query('variant'))[1];
+            $productsVariantIds = ProductVariant::where('variant', $v_label)->where("variant_id", $v_id)->get()->pluck('id')->toArray();
+            $products = $products->whereHas('prices', function($q) use ($request, $productsVariantIds, $v_id) {
+                return $q->where(function ($query) use ($productsVariantIds, $v_id) {
+                    if($v_id == 1) return $query->whereIn('product_variant_one', $productsVariantIds);
+                    if($v_id == 2) return $query->whereIn('product_variant_two', $productsVariantIds);
+                    if($v_id == 3) return $query->whereIn('product_variant_three', $productsVariantIds);
+                });
+            });
+        }
+
+//        $products = $products->has('prices', '>', 0); // Exclude products without prices
 
 
-        return view('products.index', compact('products'));
+//        dd($products->paginate()->toArray());
+
+        $products = $products->paginate();
+        return view('products.index', compact('products', 'variants'));
     }
 
     /**
