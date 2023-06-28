@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Variant;
@@ -95,7 +96,7 @@ class ProductController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
         $product = Product::create($request->only(['title', 'sku', 'description']));
 

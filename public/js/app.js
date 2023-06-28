@@ -75311,7 +75311,8 @@ var CreateProduct = function CreateProduct() {
 
     try {
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/product", product).then(function (response) {
-        console.log(response.data);
+        alert("Product created successfully");
+        window.location = '/product';
       })["catch"](function (error) {
         var _error$response, _error$response$data;
 

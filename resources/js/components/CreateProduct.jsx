@@ -193,7 +193,8 @@ const CreateProduct = () => {
             axios
                 .post("/product", product)
                 .then(response => {
-                    console.log(response.data);
+                    alert("Product created successfully");
+                    window.location = '/product';
                 })
                 .catch(error => {
                     let validationErrors = error?.response?.data?.errors
