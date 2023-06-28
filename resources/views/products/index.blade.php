@@ -122,7 +122,7 @@
                     <p>Showing {{$showingForm}} to {{$totalShowing}} out of {{$products->total()}}</p>
                 </div>
                 <div class="col-md-2">
-                    {{$products->links()}}
+                    {{$products->appends($_GET)->links()}}
                 </div>
             </div>
         </div>

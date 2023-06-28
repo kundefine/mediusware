@@ -155,6 +155,9 @@
 </div>
 
 <!-- Scripts -->
+<script>
+     window.productStoreUrl = {{route('product.store')}}
+</script>
 <script src="{{ asset('js/app.js') }}" defer></script>
 </body>
 </html>

@@ -75308,12 +75308,29 @@ var CreateProduct = function CreateProduct() {
       product_variant: formData.product_variant,
       product_variant_prices: formData.product_variant_prices
     };
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/product", product).then(function (response) {
-      console.log(response.data);
-    })["catch"](function (error) {
-      console.log(error);
-    });
-    console.log(product);
+
+    try {
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.post("/product", product).then(function (response) {
+        console.log(response.data);
+      })["catch"](function (error) {
+        var _error$response, _error$response$data;
+
+        var validationErrors = error === null || error === void 0 ? void 0 : (_error$response = error.response) === null || _error$response === void 0 ? void 0 : (_error$response$data = _error$response.data) === null || _error$response$data === void 0 ? void 0 : _error$response$data.errors;
+
+        if (validationErrors) {
+          var errorMessage = '';
+
+          for (var err in validationErrors) {
+            errorMessage += validationErrors[err] + "\n";
+          }
+
+          alert(errorMessage);
+        }
+      });
+      console.log(product);
+    } catch (err) {
+      alert('Something went wrong. please try latter');
+    }
   };
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
@@ -75334,10 +75351,10 @@ var CreateProduct = function CreateProduct() {
     checkVariant();
   }, [formData.product_variant]);
   var thumbs = formData.images.map(function (file) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _defineProperty({
       style: thumb,
       key: file.name
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "key", file.lastModified), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       style: thumbInner
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       src: file.preview,
@@ -75418,7 +75435,8 @@ var CreateProduct = function CreateProduct() {
     className: "card-body"
   }, formData.product_variant.map(function (item, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "row"
+      className: "row",
+      key: index
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-md-4"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -75432,7 +75450,8 @@ var CreateProduct = function CreateProduct() {
       }
     }, variants.map(function (variant) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-        value: variant.id
+        value: variant.id,
+        key: variant.id
       }, variant.title);
     })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-md-8"
@@ -75467,7 +75486,9 @@ var CreateProduct = function CreateProduct() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
     className: "table"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Variant"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Price"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Stock"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, formData.product_variant_prices.map(function (variant_price, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, variant_price.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+      key: index
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, variant_price.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "text",
       className: "form-control",
       value: variant_price.price,
@@ -75585,8 +75606,8 @@ if (element) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/rashed/Workplace/interview-question-sr-react/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/rashed/Workplace/interview-question-sr-react/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/kajal/ku_projects/mediusware/lr/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/kajal/ku_projects/mediusware/lr/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

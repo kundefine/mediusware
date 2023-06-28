@@ -189,16 +189,29 @@ const CreateProduct = () => {
             product_variant_prices: formData.product_variant_prices
         };
 
-        axios
-            .post("/product", product)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        try {
+            axios
+                .post("/product", product)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    let validationErrors = error?.response?.data?.errors
+                    if(validationErrors) {
+                        let errorMessage = ''
+                        for(let err in validationErrors) {
+                            errorMessage += validationErrors[err] + "\n"
+                        }
+                        alert(errorMessage);
+                    }
 
-        console.log(product);
+                });
+
+            console.log(product);
+        } catch (err) {
+            alert('Something went wrong. please try latter')
+        }
+
     };
 
     useEffect(() => {
@@ -222,7 +235,7 @@ const CreateProduct = () => {
     }, [formData.product_variant]);
 
     const thumbs = formData.images.map(file => (
-        <div style={thumb} key={file.name}>
+        <div style={thumb} key={file.name} key={file.lastModified}>
             <div style={thumbInner}>
                 <img
                     src={file.preview}
@@ -235,6 +248,8 @@ const CreateProduct = () => {
             </div>
         </div>
     ));
+
+
 
     return (
         <section>
@@ -316,7 +331,7 @@ const CreateProduct = () => {
                         </div>
                         <div className="card-body">
                             {formData.product_variant.map((item, index) => (
-                                <div className="row">
+                                <div className="row" key={index}>
                                     <div className="col-md-4">
                                         <div className="form-group">
                                             <label htmlFor="">Option</label>
@@ -330,7 +345,7 @@ const CreateProduct = () => {
                                                 }
                                             >
                                                 {variants.map(variant => (
-                                                    <option value={variant.id}>
+                                                    <option value={variant.id} key={variant.id}>
                                                         {variant.title}
                                                     </option>
                                                 ))}
@@ -391,7 +406,7 @@ const CreateProduct = () => {
                                     <tbody>
                                         {formData.product_variant_prices.map(
                                             (variant_price, index) => (
-                                                <tr>
+                                                <tr key={index}>
                                                     <td>
                                                         {variant_price.title}
                                                     </td>
